@@ -1,0 +1,3 @@
+[submodule "simulator/Moola---Multicore-Cache-Simulator"]
+	path = simulator/Moola---Multicore-Cache-Simulator
+	url = git@github.com:fernandomosquera/Moola---Multicore-Cache-Simulator.git
