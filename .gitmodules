@@ -4,3 +4,6 @@
 [submodule "simulator/dynamorio"]
 	path = simulator/dynamorio
 	url = git@github.com:DynamoRIO/dynamorio.git
+[submodule "simulator/esesc"]
+	path = simulator/esesc
+	url = git@github.com:masc-ucsc/esesc.git
