@@ -70,7 +70,7 @@ int main() {
     // attacker(cl, ts);
     std::thread t1(attacker, std::ref(cl), std::ref(ts));
     std::this_thread::sleep_for(headstart);
-    std::thread t2(square_multiply, std::ref(cl), 0b1101, 64);
+    std::thread t2(square_multiply, std::ref(cl), 0b110101001, 64);
 
     t1.join();
     t2.join();

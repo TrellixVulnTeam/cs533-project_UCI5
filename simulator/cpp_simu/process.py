@@ -9,7 +9,9 @@ if __name__ == "__main__":
     diff = [data[i + 1] - data[i] for i in range(len(data) - 1)]
     
     plt.figure(0)
-    plt.title("access time")
+    plt.title("Access Time")
+    plt.ylabel("CPU Cycles")
+    plt.xlabel("Probe Number")
     plt.plot(diff[:])
     plt.savefig("timeseries.png")
 
