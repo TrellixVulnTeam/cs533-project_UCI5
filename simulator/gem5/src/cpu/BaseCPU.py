@@ -54,6 +54,8 @@ from m5.objects.SubSystem import SubSystem
 from m5.objects.ClockDomain import *
 from m5.objects.Platform import Platform
 
+from m5.objects.XBar import L3XBar
+
 default_tracer = ExeTracer()
 
 if buildEnv['TARGET_ISA'] == 'sparc':
@@ -323,3 +325,13 @@ class BaseCPU(ClockedObject):
             self._uncached_interrupt_request_ports = \
                     self._uncached_interrupt_request_ports + [
                     "interrupts[0].int_requestor"]
+
+    # Add three-level cache architecture configuration
+    def addThreeLevelCacheHierarchy(self, ic, dc, l3c, iwc=None, dwc=None,
+                                  xbar=None):
+        self.addPrivateSplitL1Caches(ic, dc, iwc, dwc)
+        self.tol3bus = xbar if xbar else L3XBar()
+        self.connectCachedPorts(self.tol3bus)
+        self.l3cache = l3c
+        self.tol3bus.master = self.l3cache.cpu_side
+        self._cached_ports = ['l3cache.mem_side']

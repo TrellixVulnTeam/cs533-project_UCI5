@@ -153,6 +153,8 @@ def addNoISAOptions(parser):
     parser.add_argument("--l2_assoc", type=int, default=8)
     parser.add_argument("--l3_assoc", type=int, default=16)
     parser.add_argument("--cacheline_size", type=int, default=64)
+    parser.add_argument("--l3cache", action="store_true")
+
 
     # Enable Ruby
     parser.add_argument("--ruby", action="store_true")
@@ -178,7 +180,6 @@ def addNoISAOptions(parser):
         "sets max_insts_all_threads for cpus 0, 1, 3, 5 and 7 "
         "Direct parameters of the root object are not accessible, "
         "only parameters of its children.")
-
 # Add common options that assume a non-NULL ISA.
 
 
@@ -454,6 +455,7 @@ def addSEOptions(parser):
                         "to/host/dir1 --redirects /dir2=/path/to/host/dir2")
     parser.add_argument("--wait-gdb", default=False, action='store_true',
                         help="Wait for remote GDB to connect.")
+    
 
 
 def addFSOptions(parser):
