@@ -1,0 +1,1 @@
+build/X86/gem5.opt configs/example/l3se.py --num-cpu=2 --caches --l2cache --l3cache -c"tests/test-progs/hello/bin/x86/linux/hello"
