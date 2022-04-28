@@ -215,11 +215,7 @@ def config_cache(options, system):
             else:
                 system.cpu[i].l2cache.mem_side = system.membus.cpu_side_ports
 
-        if options.l3cache:
-            system.cpu[i].connectAllPorts(
-                system.tol3bus.cpu_side_ports,
-                system.membus.cpu_side_ports, system.membus.mem_side_ports)
-        elif options.l2cache:
+        if options.l2cache:
             system.cpu[i].connectAllPorts(
                 system.cpu[i].tol2bus.cpu_side_ports,
                 system.membus.cpu_side_ports, system.membus.mem_side_ports)
