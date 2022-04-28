@@ -85,10 +85,10 @@ def config_cache(options, system):
             print("O3_ARM_v7a_3 is unavailable. Did you compile the O3 model?")
             sys.exit(1)
 
-        dcache_class, icache_class, l2_cache_class, walk_cache_class = \
+        dcache_class, icache_class, l2_cache_class, l3_cache_class, walk_cache_class = \
             core.O3_ARM_v7a_DCache, core.O3_ARM_v7a_ICache, \
             core.O3_ARM_v7aL2, \
-            core.O3_ARM_v7aL3
+            core.O3_ARM_v7aL3, None
 
     elif options.cpu_type == "HPI":
         try:
@@ -97,7 +97,7 @@ def config_cache(options, system):
             print("HPI is unavailable.")
             sys.exit(1)
 
-        dcache_class, icache_class, l2_cache_class, walk_cache_class = \
+        dcache_class, icache_class, l2_cache_class, l3_cache_class, walk_cache_class = \
             core.HPI_DCache, core.HPI_ICache, core.HPI_L2, core.HPI_L3, None
     else:
         dcache_class, icache_class, l2_cache_class, l3_cache_class = \
@@ -105,7 +105,6 @@ def config_cache(options, system):
 
         if buildEnv['TARGET_ISA'] in ['x86', 'riscv']:
             walk_cache_class = PageTableWalkerCache
-
     # Set the cache line size of the system
     system.cache_line_size = options.cacheline_size
 
@@ -116,6 +115,7 @@ def config_cache(options, system):
     if options.l3cache and options.elastic_trace_en:
         fatal("When elastic trace is enabled, do not configure L3 caches.")
 
+    # Shared L3 cache
     if options.l3cache:
         # Provide a clock for the L2 and the L1-to-L2 bus here as they
         # are not connected using addTwoLevelCacheHierarchy. Use the
@@ -189,37 +189,22 @@ def config_cache(options, system):
 
         system.cpu[i].createInterruptController()
 
-        system.cpu[i].l2cache = l2_cache_class(clk_domain=system.cpu_clk_domain, 
-                                               **_get_cache_opts('l2', options))
-        system.cpu[i].tol2bus = L2XBar(clk_domain=system.cpu_clk_domain)
-        # system.cpu[i].l2cache.cpu_side = system.cpu[i].tol2bus.mem_side_ports
-        # system.cpu[i].l2cache.mem_side = system.tol3bus.cpu_side_ports
-
-        # if options.l3cache:
-        #     system.cpu[i].connectAllPorts(
-        #         system.cpu[i].tol2bus,
-        #         system.membus)
-        # elif options.external_memory_system:
-        #     system.cpu[i].connectUncachedPorts(
-        #         system.membus.cpu_side_ports, system.membus.mem_side_ports)
-        # else:
-        #     if options.l2cache:
-        #         system.cpu[i].connectAllPorts(system.tol2bus, system.membus)
-        #     else:
-        #         system.cpu[i].connectAllPorts(system.membus)
-
+        # Create L2 cache and L2 bus and connect ports
         if options.l2cache:
+            system.cpu[i].l2cache = l2_cache_class(clk_domain=system.cpu_clk_domain, 
+                                                   **_get_cache_opts('l2', options))
+            system.cpu[i].tol2bus = L2XBar(clk_domain=system.cpu_clk_domain)
+            # Connect L2 cache to L2 bus
             system.cpu[i].l2cache.cpu_side = system.cpu[i].tol2bus.mem_side_ports
+
+            # Connect L2 cache to L3 bus if L3 cache enabled
             if options.l3cache:
                 system.cpu[i].l2cache.mem_side = system.tol3bus.cpu_side_ports
+            # Otherwise connect L2 cache to membus directly
             else:
                 system.cpu[i].l2cache.mem_side = system.membus.cpu_side_ports
 
-        if options.l3cache:
-            system.cpu[i].connectAllPorts(
-                system.tol3bus.cpu_side_ports,
-                system.membus.cpu_side_ports, system.membus.mem_side_ports)
-        elif options.l2cache:
+            # Connects Icache and Dcache to L2 bus and connect membus interrupts
             system.cpu[i].connectAllPorts(
                 system.cpu[i].tol2bus.cpu_side_ports,
                 system.membus.cpu_side_ports, system.membus.mem_side_ports)
@@ -227,7 +212,13 @@ def config_cache(options, system):
             system.cpu[i].connectUncachedPorts(
                 system.membus.cpu_side_ports, system.membus.mem_side_ports)
         else:
-            system.cpu[i].connectBus(system.membus)
+            if options.l3cache:
+                system.cpu[i].tol2bus = L2XBar(clk_domain=system.cpu_clk_domain)
+                system.tol3bus.cpu_side_ports = system.cpu[i].tol2bus.mem_side_ports
+                system.cpu[i].connectAllPorts(system.cpu[i].tol2bus.cpu_side_ports, 
+                                              system.membus.cpu_side_ports, system.membus.mem_side_ports)
+            else:
+                system.cpu[i].connectBus(system.membus)
 
     return system
 
