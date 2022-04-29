@@ -204,11 +204,7 @@ def config_cache(options, system):
             else:
                 system.cpu[i].l2cache.mem_side = system.membus.cpu_side_ports
 
-<<<<<<< HEAD
             # Connects Icache and Dcache to L2 bus and connect membus interrupts
-=======
-        if options.l2cache:
->>>>>>> 9dc2dbcde12afc3e422ce4c225127c1fffb2428a
             system.cpu[i].connectAllPorts(
                 system.cpu[i].tol2bus.cpu_side_ports,
                 system.membus.cpu_side_ports, system.membus.mem_side_ports)
