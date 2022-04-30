@@ -1,3 +1,5 @@
 librsa.so
 rsa.o
 victim
+attacker
+.vscode

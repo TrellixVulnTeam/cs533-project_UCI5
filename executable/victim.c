@@ -8,7 +8,7 @@
 #include <time.h>
 #include <sys/select.h>
 #include <unistd.h>
-#include "rsa.h"
+#include <rsa.h>
 
 int main() {
     printf("hello world!\n");

@@ -1,7 +1,8 @@
-CFLAGS=-g -Wall -O0 -std=c99
-.PHONY: all rsa victim
+CFLAGS=-g -Wall -O0 -std=c99 -I.
+LDFLAGS=-L. -lrsa
+.PHONY: all rsa victim attacker
 
-all: rsa victim
+all: rsa victim attacker
 
 rsa: rsa.o
 	gcc -shared -fPIC -o librsa.so $^
@@ -9,8 +10,11 @@ rsa: rsa.o
 rsa.o: rsa.c rsa.h
 	gcc $(CFLAGS) -fPIC rsa.c -c -o $@
 
-victim: victim.c
-	gcc $(CFLAGS) victim.c  -o victim -L. -lrsa
+victim: rsa victim.c
+	gcc $(CFLAGS) victim.c  -o victim $(LDFLAGS)
+
+attacker: rsa attacker.c 
+	gcc $(CFLAGS) attacker.c -o attacker $(LDFLAGS)
 
 clean:
 	rm -f *.o victim attacker librsa.so
