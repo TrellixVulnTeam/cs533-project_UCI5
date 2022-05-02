@@ -1,4 +1,4 @@
-CFLAGS=-g -Wall -O0 -std=c99 -I.
+CFLAGS=-g -Wall -O0 -std=gnu11 -I.
 LDFLAGS=-L. -lrsa
 .PHONY: all rsa victim attacker
 
