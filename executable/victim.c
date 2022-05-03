@@ -11,20 +11,13 @@
 #include <rsa.h>
 
 int main() {
-    printf("hello world!\n");
-    volatile int32_t i[16] = {};
-    // i[0] = 1;
-    __asm__ volatile("clflush (%0)" ::"r"(&i[0]));
-
-    printf("hello world %d!\n", i[0]);
-
     bignum * base = bignum_init();
     bignum * pow = bignum_init();
     bignum * mod = bignum_init();
     bignum* result = bignum_init();
 
     bignum_fromstring(base, "2");
-    bignum_fromstring(pow, "27");
+    bignum_fromint(pow, 39843);
     bignum_fromstring(mod, "65537");
 
     bignum_modpow(base, pow, mod, result);
