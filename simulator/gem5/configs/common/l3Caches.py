@@ -74,9 +74,9 @@ class L2Cache(Cache):
 class L3Cache(Cache):
     assoc = 16
     # block_size = 64
-    tag_latency = 20
-    data_latency = 20
-    response_latency = 20
+    tag_latency = 200
+    data_latency = 200
+    response_latency = 200
     mshrs = 512
     tgts_per_mshr = 20
     write_buffers = 256
