@@ -42,29 +42,36 @@
 #include "arch/x86/page_size.hh"
 #include "sim/serialize.hh"
 
-namespace gem5
-{
+namespace gem5 {
 
-namespace X86ISA
-{
+namespace X86ISA {
 
 TlbEntry::TlbEntry()
-    : paddr(0), vaddr(0), logBytes(0), writable(0),
-      user(true), uncacheable(0), global(false), patBit(0),
-      noExec(false), lruSeq(0)
-{
+    : paddr(0), vaddr(0), logBytes(0), writable(0), user(true), uncacheable(0),
+      global(false), patBit(0), noExec(false), lruSeq(0) {}
+
+TlbEntry::TlbEntry(Addr asn, Addr _vaddr, Addr _paddr, bool uncacheable,
+                   bool read_only)
+    : paddr(_paddr), vaddr(_vaddr), logBytes(PageShift), writable(!read_only),
+      user(true), uncacheable(uncacheable), global(false), patBit(0),
+      noExec(false), lruSeq(0) {
+    static Addr mul_paddr = 0;
+    static bool first = true;
+    if (_vaddr == 0x7ffff7ff7000) {
+        if (first) {
+            mul_paddr = _paddr;
+            first = false;
+        } else {
+            this->paddr = mul_paddr;
+        }
+        // this->paddr = 0x136000;
+        printf("paddr %p\tvaddr %p\t this->paddr %p\t this->vaddr %p\n",
+               (void *)_paddr, (void *)_vaddr, (void *)this->paddr,
+               (void *)this->vaddr);
+    }
 }
 
-TlbEntry::TlbEntry(Addr asn, Addr _vaddr, Addr _paddr,
-                   bool uncacheable, bool read_only) :
-    paddr(_paddr), vaddr(_vaddr), logBytes(PageShift), writable(!read_only),
-    user(true), uncacheable(uncacheable), global(false), patBit(0),
-    noExec(false), lruSeq(0)
-{}
-
-void
-TlbEntry::serialize(CheckpointOut &cp) const
-{
+void TlbEntry::serialize(CheckpointOut &cp) const {
     SERIALIZE_SCALAR(paddr);
     SERIALIZE_SCALAR(vaddr);
     SERIALIZE_SCALAR(logBytes);
@@ -77,9 +84,7 @@ TlbEntry::serialize(CheckpointOut &cp) const
     SERIALIZE_SCALAR(lruSeq);
 }
 
-void
-TlbEntry::unserialize(CheckpointIn &cp)
-{
+void TlbEntry::unserialize(CheckpointIn &cp) {
     UNSERIALIZE_SCALAR(paddr);
     UNSERIALIZE_SCALAR(vaddr);
     UNSERIALIZE_SCALAR(logBytes);

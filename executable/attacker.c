@@ -19,6 +19,7 @@ int main() {
     int64_t stat[TRIALS] = {};
     struct timespec slp_duration = {.tv_sec = 0, .tv_nsec=1};
     char *func = (char*)bignum_imultiply;
+    printf("bignum_imultiply vaddr: %p\n", bignum_imultiply);
     char temp;
 
     for (int i = 0; i < TRIALS; ++i) {

@@ -11,6 +11,8 @@
 #include <rsa.h>
 
 int main() {
+    printf("bignum_imultiply vaddr: %p\n", bignum_imultiply);
+
     bignum * base = bignum_init();
     bignum * pow = bignum_init();
     bignum * mod = bignum_init();
@@ -21,8 +23,11 @@ int main() {
     bignum_fromstring(mod, "65537");
 
     bignum_modpow(base, pow, mod, result);
+    printf("result: ");
     bignum_print(result);
     printf("\n");
+    printf("bignum_print vaddr: %p\n", bignum_print);
+
 
     bignum_deinit(base);
     bignum_deinit(pow);
