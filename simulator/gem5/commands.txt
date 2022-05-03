@@ -1,1 +1,1 @@
-build/X86/gem5.opt configs/example/l3se.py --env "env.txt" --num-cpu=2 --caches --l2cache --l3cache -c"../../executable/victim"
+build/X86/gem5.opt configs/example/l3se.py --env "env.txt" --num-cpu=2 --cpu-type="TimingSimpleCPU" --caches --l2cache --l3cache -c"../../executable/attacker;../../executable/victim"
