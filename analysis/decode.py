@@ -1,7 +1,7 @@
 from plot import *
 import os
 
-SUPPRESS_THRESHOLD = 10
+SUPPRESS_THRESHOLD = 12
 INTERVAL_CLASSIFIER = 25
 
 
@@ -25,7 +25,7 @@ def decode(filename):
         data = [int(elem) for elem in line.split(",")[:-1]]
 
     diff = [data[i + 1] - data[i] for i in range(len(data) - 1)]
-    # plotList(diff)
+    plotList(diff)
     # filter out noise
     base = mostfrequent(diff)
     print(base)
@@ -53,15 +53,16 @@ def decode(filename):
     passcode_bin = []
     for i, val in enumerate(key_interval):
         if val > INTERVAL_CLASSIFIER:
-            if i == len(key_interval) - 1 or key_interval[i + 1] > INTERVAL_CLASSIFIER:
-                passcode_bin.append(0)
-            else:
+            passcode_bin.append(0)
+        elif val < INTERVAL_CLASSIFIER:
+            if i == len(key_interval) - 1 or key_interval[i + 1] >= INTERVAL_CLASSIFIER:
                 passcode_bin.append(1)
+                key_interval.pop(i)
     passcode_bin[:] = passcode_bin[::-1]
     print("Password in binary form: ", passcode_bin)
-    
+
     passcode_dec = 0
-    for digit in passcode_bin:
+    for digit in passcode_bin: 
         passcode_dec = 2 * passcode_dec + digit
     print("Password in decimal form: ", passcode_dec)
     # plotList(diff)
