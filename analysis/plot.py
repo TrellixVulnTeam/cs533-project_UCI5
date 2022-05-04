@@ -30,6 +30,13 @@ def plot(key, file=None):
     plt.plot(x, y)
     plt.savefig(f"figs/{key}/cdf.png")
 
+def plotList(List):
+    plt.figure()
+    plt.title("Access Time")
+    plt.ylabel("CPU Cycles")
+    plt.xlabel("Probe Number")
+    plt.plot(List[:])
+    plt.show()
 
 if __name__ == "__main__":
     key = sys.argv[1]
