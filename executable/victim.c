@@ -19,7 +19,7 @@ int main() {
     bignum* result = bignum_init();
 
     bignum_fromstring(base, "2");
-    bignum_fromint(pow, 39843);
+    bignum_fromint(pow, 0b10101010);
     bignum_fromstring(mod, "65537");
 
     bignum_modpow(base, pow, mod, result);
