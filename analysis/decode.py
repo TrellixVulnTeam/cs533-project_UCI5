@@ -81,6 +81,11 @@ def decode(filename):
     passcode_dec = 0
     for digit in passcode_bin: 
         passcode_dec = 2 * passcode_dec + digit
+
+    with open("decoded.txt", "w") as f:
+        for digit in passcode_bin:
+            f.write(str(digit))
+        f.write("\n")
     print("Password in decimal form: ", passcode_dec)
     print("Password in binary form: ", bin(passcode_dec))
     # plotList(diff)
