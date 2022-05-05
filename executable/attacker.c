@@ -6,7 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define TRIALS 1000
+#define TRIALS 2200
 
 int main() {
     // int64_t t0, t1;
