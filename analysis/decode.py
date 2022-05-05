@@ -1,8 +1,8 @@
 from plot import *
 import os
 
-SUPPRESS_THRESHOLD = 12
-INTERVAL_CLASSIFIER = 25
+SUPPRESS_THRESHOLD = 15
+CLASSIFY_THRESHOLD = 0.25
 
 
 def mostfrequent(List, nonzero = False):
@@ -51,13 +51,20 @@ def decode(filename):
     # plotList(key_interval)
 
     passcode_bin = []
+    # for i, val in enumerate(key_interval):
+    #     if val > INTERVAL_CLASSIFIER:
+    #         passcode_bin.append(0)
+    #     elif val < INTERVAL_CLASSIFIER:
+    #         if i == len(key_interval) - 1 or key_interval[i + 1] >= INTERVAL_CLASSIFIER:
+    #             passcode_bin.append(1)
+    #             key_interval.pop(i)
     for i, val in enumerate(key_interval):
-        if val > INTERVAL_CLASSIFIER:
+        if i != len(key_interval)-1 and key_interval[i+1] >= val * (1 + CLASSIFY_THRESHOLD):
+            passcode_bin.append(1)
+            key_interval.pop(i+1)
+        else:
             passcode_bin.append(0)
-        elif val < INTERVAL_CLASSIFIER:
-            if i == len(key_interval) - 1 or key_interval[i + 1] >= INTERVAL_CLASSIFIER:
-                passcode_bin.append(1)
-                key_interval.pop(i)
+
     passcode_bin[:] = passcode_bin[::-1]
     print("Password in binary form: ", passcode_bin)
 
