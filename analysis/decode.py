@@ -30,7 +30,7 @@ def decode(filename):
     base = mostfrequent(diff)
     print(base)
     diff[:] = [max(0,-(val - base)) for val in diff]
-    # plotList(diff)
+    plotList(diff)
     # reduce initialization overhead & noise
     # secondary_base = mostfrequent(diff, nonzero=True)
     # print(secondary_base)
@@ -40,15 +40,15 @@ def decode(filename):
 
     peak_list = np.where(np.array(diff) > 0)[0]
     # print(peak_list)
-    # plotList(peak_list)
+    plotList(peak_list)
 
     interval = [peak_list[i+1] - peak_list[i] for i in range(len(peak_list) - 1)]
     print(interval)
-    # plotList(interval)
+    plotList(interval)
 
     key_interval = list(filter(lambda num: num > SUPPRESS_THRESHOLD, interval))
     print(key_interval)
-    # plotList(key_interval)
+    plotList(key_interval)
 
     passcode_bin = []
     # for i, val in enumerate(key_interval):
@@ -58,10 +58,20 @@ def decode(filename):
     #         if i == len(key_interval) - 1 or key_interval[i + 1] >= INTERVAL_CLASSIFIER:
     #             passcode_bin.append(1)
     #             key_interval.pop(i)
-    for i, val in enumerate(key_interval):
-        if i != len(key_interval)-1 and key_interval[i+1] >= val * (1 + CLASSIFY_THRESHOLD):
+    # for i, val in enumerate(key_interval):
+    #     if i != len(key_interval)-1 and key_interval[i+1] >= val * (1 + CLASSIFY_THRESHOLD):
+    #         passcode_bin.append(1)
+    #         key_interval.pop(i+1)
+    #     else:
+    #         passcode_bin.append(0)
+    flag = 0
+    for i in range(len(key_interval)):
+        if flag:
+            flag = 0
+            continue
+        elif i != len(key_interval)-1 and key_interval[i+1] >= key_interval[i] * (1 + CLASSIFY_THRESHOLD):
             passcode_bin.append(1)
-            key_interval.pop(i+1)
+            flag = 1
         else:
             passcode_bin.append(0)
 
@@ -72,8 +82,9 @@ def decode(filename):
     for digit in passcode_bin: 
         passcode_dec = 2 * passcode_dec + digit
     print("Password in decimal form: ", passcode_dec)
+    print("Password in binary form: ", bin(passcode_dec))
     # plotList(diff)
-    
+    print("Actual value:            ", bin(3874308138))
 
 
 if __name__ == "__main__":
