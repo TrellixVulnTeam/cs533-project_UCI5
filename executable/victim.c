@@ -10,29 +10,31 @@
 #include <unistd.h>
 #include <rsa.h>
 
+#define SECRET 1555118843
+
 int main() {
-    printf("bignum_imultiply vaddr: %p\n", bignum_imultiply);
+printf("bignum_imultiply vaddr: %p\n", bignum_imultiply);
 
-    bignum * base = bignum_init();
-    bignum * pow = bignum_init();
-    bignum * mod = bignum_init();
-    bignum* result = bignum_init();
+bignum * base = bignum_init();
+bignum * pow = bignum_init();
+bignum * mod = bignum_init();
+bignum* result = bignum_init();
 
-    bignum_fromstring(base, "2");
-    bignum_fromint(pow, 0b11100111001110011000101101101010);
-    bignum_fromstring(mod, "65537");
+bignum_fromstring(base, "2");
+bignum_fromint(pow, SECRET);
+bignum_fromstring(mod, "65537");
 
-    bignum_modpow(base, pow, mod, result);
-    printf("result: ");
-    bignum_print(result);
-    printf("\n");
-    printf("bignum_print vaddr: %p\n", bignum_print);
+bignum_modpow(base, pow, mod, result);
+printf("result: ");
+bignum_print(result);
+printf("\n");
+printf("bignum_print vaddr: %p\n", bignum_print);
 
 
-    bignum_deinit(base);
-    bignum_deinit(pow);
-    bignum_deinit(mod);
-    bignum_deinit(result);
+bignum_deinit(base);
+bignum_deinit(pow);
+bignum_deinit(mod);
+bignum_deinit(result);
 
-    return 0;
+return 0;
 }
