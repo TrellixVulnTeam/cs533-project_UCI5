@@ -1,6 +1,6 @@
 #!/bin/bash
 
-num=10
+num=100
 
 for i in $(seq 0 $(($num - 1))); do
     python3 patch.py $i
@@ -13,3 +13,4 @@ for i in $(seq 0 $(($num - 1))); do
     python3 stat.py $i
 done
 
+python3 stat_analysis.py

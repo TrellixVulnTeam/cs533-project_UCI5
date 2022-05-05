@@ -25,12 +25,12 @@ def decode(filename):
         data = [int(elem) for elem in line.split(",")[:-1]]
 
     diff = [data[i + 1] - data[i] for i in range(len(data) - 1)]
-    plotList(diff)
+    # plotList(diff)
     # filter out noise
     base = mostfrequent(diff)
-    print(base)
+    # print(base)
     diff[:] = [max(0,-(val - base)) for val in diff]
-    plotList(diff)
+    # plotList(diff)
     # reduce initialization overhead & noise
     # secondary_base = mostfrequent(diff, nonzero=True)
     # print(secondary_base)
@@ -40,15 +40,15 @@ def decode(filename):
 
     peak_list = np.where(np.array(diff) > 0)[0]
     # print(peak_list)
-    plotList(peak_list)
+    # plotList(peak_list)
 
     interval = [peak_list[i+1] - peak_list[i] for i in range(len(peak_list) - 1)]
-    print(interval)
-    plotList(interval)
+    # print(interval)
+    # plotList(interval)
 
     key_interval = list(filter(lambda num: num > SUPPRESS_THRESHOLD, interval))
-    print(key_interval)
-    plotList(key_interval)
+    # print(key_interval)
+    # plotList(key_interval)
 
     passcode_bin = []
     # for i, val in enumerate(key_interval):
@@ -75,8 +75,11 @@ def decode(filename):
         else:
             passcode_bin.append(0)
 
+    while len(passcode_bin) < 32:
+        passcode_bin.append(0)
+
     passcode_bin[:] = passcode_bin[::-1]
-    print("Password in binary form: ", passcode_bin)
+    # print("Password in binary form: ", passcode_bin)
 
     passcode_dec = 0
     for digit in passcode_bin: 
@@ -86,10 +89,10 @@ def decode(filename):
         for digit in passcode_bin:
             f.write(str(digit))
         f.write("\n")
-    print("Password in decimal form: ", passcode_dec)
-    print("Password in binary form: ", bin(passcode_dec))
+    # print("Password in decimal form: ", passcode_dec)
+    # print("Password in binary form: ", bin(passcode_dec))
     # plotList(diff)
-    print("Actual value:            ", bin(3874308138))
+    # print("Actual value:            ", bin(3874308138))
 
 
 if __name__ == "__main__":
